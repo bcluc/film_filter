@@ -8,9 +8,11 @@ This is a movie recommendation system that suggests movies based on their descri
    git clone https://github.com/bcluc/film_filter.git
    cd film_filter
    
-2. **Create a virtual environment (optional but recommended)**
-python3 -m venv venv
-source ./venv/bin/activate
+2. **Create a virtual environment (optional but recommended)**:
+   ```bash
+   python3 -m venv venv
+   source ./venv/bin/activate
 
-4. **Install the required packages**
-pip install numpy pandas nltk scikit-learn supabase
+4. **Install the required packages**:
+   ```bash
+   pip install numpy pandas nltk scikit-learn supabase
