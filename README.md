@@ -22,5 +22,5 @@ This is a movie recommendation system that suggests movies based on their descri
 
 3. **Install the required packages**:
    ```bash
-   pip install numpy pandas nltk scikit-learn supabase huggingface_hub tabulate
+   pip install numpy pandas nltk scikit-learn supabase huggingface_hub tabulate Flask flasgger
    ```

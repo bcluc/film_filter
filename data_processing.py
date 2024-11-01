@@ -9,11 +9,12 @@ from sklearn.feature_extraction.text import CountVectorizer
 import ast
 import json
 import kagglehub
+import warnings
 from tabulate import tabulate
 from supabase import create_client, Client
-
 from huggingface_hub import hf_hub_download
 
+warnings.filterwarnings("ignore", category=UserWarning, module="sklearn")
 # CONNECT TO DTB
 url: str = ("https://kpaxjjmelbqpllxenpxz.supabase.co")
 key: str = ("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtwYXhqam1lbGJxcGxseGVucHh6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY5MzA0NjQ5NCwiZXhwIjoyMDA4NjIyNDk0fQ.hGeExPN7h7gYiOILzPU57vSob9LC1UB-W2o6Z7WGLZs")
@@ -110,7 +111,6 @@ def recommend(movie):
     recommendations = [new.iloc[i[0]].title for i in movie_list[1:6]]
     return recommendations
 
-print(recommend('Violet Evergarden (2018)'))
+pickle.dump(new, open('movie_list.pkl', 'wb'))
+pickle.dump(similarity, open('similarity.pkl', 'wb'))
 
-
-# print(new.head(3))
