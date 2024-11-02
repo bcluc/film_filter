@@ -95,7 +95,7 @@ def movie_details():
     }
     return jsonify(movie_data)
 
-@app.route('/health', methods=['GET'])
+@app.route('/', methods=['GET'])
 def health_check():
     """
     Health Check
@@ -112,6 +112,7 @@ def health_check():
               example: "Healthy"
     """
     return jsonify({'status': 'Healthy'}), 200
+
 # Run the app
 if __name__ == '__main__':
     app.run(debug=True)
