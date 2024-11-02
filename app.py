@@ -95,6 +95,23 @@ def movie_details():
     }
     return jsonify(movie_data)
 
+@app.route('/health', methods=['GET'])
+def health_check():
+    """
+    Health Check
+    ---
+    description: Check if the server is running
+    responses:
+      200:
+        description: Server is healthy
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              example: "Healthy"
+    """
+    return jsonify({'status': 'Healthy'}), 200
 # Run the app
 if __name__ == '__main__':
     app.run(debug=True)
