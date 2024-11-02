@@ -12,25 +12,25 @@ swagger = Swagger(app)  # Initialize Swagger
 
 # Recommendation function for titles only
 def recommend(movie):
-    if movie not in movies['title'].values:
+    if movie not in movies['id'].values:
         return []  # Return an empty list if the movie is not found
-    index = movies[movies['title'] == movie].index[0]
+    index = movies[movies['id'] == movie].index[0]
     movie_list = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1])[1:6]
     return [movies.iloc[i[0]].title for i in movie_list]
 
 # Extended recommendation function with details
 def recommend_with_details(movie):
-    if movie not in movies['title'].values:
+    if movie not in movies['id'].values:
         return []
-    index = movies[movies['title'] == movie].index[0]
+    index = movies[movies['id'] == movie].index[0]
     movie_list = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1])[1:6]
     
     # Return details like movie_id, title, and tags
     recommendations = [
         {
-            'movie_id': movies.iloc[i[0]].movie_id,
+            'movie_id': movies.iloc[i[0]].id,
             'title': movies.iloc[i[0]].title,
-            'tags': movies.iloc[i[0]].tags
+            'poster_path': movies.iloc[i[0]].poster_path
         }
         for i in movie_list
     ]
@@ -62,11 +62,11 @@ def movie_details():
     Get Movie Details
     ---
     parameters:
-      - name: movie
+      - name: movie_id
         in: query
         type: string
         required: true
-        description: The title of the movie to retrieve details for
+        description: The id of the movie to retrieve details for
     responses:
       200:
         description: Detailed information about the movie
@@ -83,60 +83,17 @@ def movie_details():
         description: Movie not found
     """
     movie_title = request.args.get('movie')
-    movie = movies[movies['title'] == movie_title]
+    movie = movies[movies['id'] == movie_title]
     
     if movie.empty:
         return jsonify({'error': 'Movie not found'}), 404
 
     movie_data = {
-        'movie_id': movie.iloc[0].movie_id,
+        'movie_id': movie.iloc[0].id,
         'title': movie.iloc[0].title,
-        'tags': movie.iloc[0].tags
+        'poster_path': movies.iloc[0].poster_path
     }
     return jsonify(movie_data)
-
-@app.route('/recommend-custom', methods=['GET'])
-def recommend_custom():
-    """
-    Get Custom Recommendations
-    ---
-    parameters:
-      - name: movie
-        in: query
-        type: string
-        required: true
-        description: The title of the movie to base recommendations on
-    responses:
-      200:
-        description: List of recommended movies with details
-        schema:
-          type: object
-          properties:
-            recommendations:
-              type: array
-              items:
-                type: object
-                properties:
-                  movie_id:
-                    type: integer
-                  title:
-                    type: string
-                  tags:
-                    type: string
-      400:
-        description: Movie title not provided
-      404:
-        description: Movie not found
-    """
-    movie = request.args.get('movie')
-    if not movie:
-        return jsonify({'error': 'Please provide a movie title'}), 400
-
-    recommendations = recommend_with_details(movie)
-    if not recommendations:
-        return jsonify({'error': 'Movie not found'}), 404
-
-    return jsonify({'recommendations': recommendations})
 
 # Run the app
 if __name__ == '__main__':

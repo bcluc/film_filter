@@ -57,7 +57,7 @@ films_data = films_data.merge(crews_data, left_on='id', how='outer', right_on='f
 films_data = films_data.merge(genres_data, left_on='id', how='outer', right_on='film_id', suffixes=('', '_genre')).fillna('NAN')
 
 # CLEAN AND CHOOSE WHICH COLUMN TO DISPLAY
-data_set = films_data[['id','name','overview','name_genre','search_context','character','name_crew']]
+data_set = films_data[['id','name','overview','name_genre','search_context','character','name_crew','poster_path']]
 data_set = data_set.groupby('id').agg(lambda x: list(set(x))).reset_index()
 data_set.rename(columns={'name_crew': 'crew', 'character': 'cast', 'name': 'title', 'name_genre': 'genres'}, inplace=True)
 
@@ -102,11 +102,12 @@ def stem(text):
     return " ".join([ps.stem(word) for word in text.split()])
 new['tags'] = new['tags'].apply(stem)
 
+print(tabulate(new.columns))
 # BUILDING RECOMMEND SYSTEMs
 similarity = cosine_similarity(vector)
 
-def recommend(movie):
-    index = new[new['title'] == movie].index[0]
+def recommend(movie_id):
+    index = new[new['id'] == movie_id].index[0]
     movie_list = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda x: x[1])
     recommendations = [new.iloc[i[0]].title for i in movie_list[1:6]]
     return recommendations
